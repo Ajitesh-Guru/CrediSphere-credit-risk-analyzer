@@ -4,48 +4,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root.light-theme {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    --primary: 181 75% 51%;
-    --primary-foreground: 240 10% 3.9%;
-
-    --secondary: 203 100% 19%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --accent: 194 100% 15%;
-    --accent-foreground: 240 10% 3.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 183 73% 49%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 95%;
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 181 75% 51%;
-    --sidebar-primary-foreground: 240 10% 3.9%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 240 10% 3.9%;
-    --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 181 75% 51%;
-  }
-
-  :root, :root.dark-theme {
+  :root {
     --background: 220 7% 8%;
     --foreground: 210 40% 98%;
 
@@ -95,22 +54,4 @@
   body {
     @apply bg-theme-background text-foreground;
   }
-}
-
-/* Light theme specific theme color definitions */
-:root.light-theme {
-  --theme-dark: #ffffff;
-  --theme-primary: #27dddf;
-  --theme-secondary: #003662;
-  --theme-tertiary: #00384d;
-  --theme-background: #f5f7fa;
-}
-
-/* Dark theme specific theme color definitions */
-:root, :root.dark-theme {
-  --theme-dark: #000000;
-  --theme-primary: #27dddf;
-  --theme-secondary: #003662;
-  --theme-tertiary: #00384d;
-  --theme-background: #141519;
 }

@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { Button } from '@/components/ui/button';
 import { BarChart2, FileText, Home, LogOut, User } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 
 const Header: React.FC = () => {
   const { user, logout } = useUser();
@@ -62,7 +61,6 @@ const Header: React.FC = () => {
                     {user.email || user.name || 'User'}
                   </span>
                 </div>
-                <ThemeToggle />
                 <Button variant="ghost" size="sm" onClick={logout} className="text-gray-300 hover:text-white hover:bg-theme-secondary/30">
                   <LogOut className="h-4 w-4 mr-1" />
                   <span className="hidden md:inline">Logout</span>
@@ -70,7 +68,6 @@ const Header: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <ThemeToggle />
                 <Button asChild variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-theme-secondary/30">
                   <Link to="/login">Login</Link>
                 </Button>
