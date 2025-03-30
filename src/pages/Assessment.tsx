@@ -7,9 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { toast } from '@/hooks/use-toast';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Calculator, FileSpreadsheet, FileCheck } from 'lucide-react';
+import { assessCreditRisk } from '@/utils/creditRiskModel';
 
 const Assessment = () => {
   const { user } = useUser();
@@ -21,13 +29,11 @@ const Assessment = () => {
     recommended: boolean;
   }>(null);
 
-  // Form fields
-  const [applicantName, setApplicantName] = useState('');
+  // Form fields based on the ML model criteria
   const [income, setIncome] = useState('');
-  const [creditScore, setCreditScore] = useState([650]);
   const [loanAmount, setLoanAmount] = useState('');
-  const [loanTerm, setLoanTerm] = useState('');
-  const [employmentYears, setEmploymentYears] = useState('');
+  const [spendingHabits, setSpendingHabits] = useState<'Frugal' | 'Average' | 'Moderate Spending' | 'High Spending'>('Average');
+  const [creditHistoryLength, setCreditHistoryLength] = useState('');
 
   // Redirect if not logged in
   React.useEffect(() => {
@@ -39,7 +45,7 @@ const Assessment = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!applicantName || !income || !loanAmount || !loanTerm || !employmentYears) {
+    if (!income || !loanAmount || !creditHistoryLength) {
       toast({
         title: 'Error',
         description: 'Please fill in all required fields.',
@@ -51,39 +57,19 @@ const Assessment = () => {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Calculate risk score (this would be done by an API/algorithm in a real app)
       const incomeNum = parseFloat(income.replace(/,/g, ''));
       const loanAmountNum = parseFloat(loanAmount.replace(/,/g, ''));
-      const employmentYearsNum = parseFloat(employmentYears);
-      const loanTermNum = parseFloat(loanTerm);
+      const creditHistoryLengthNum = parseFloat(creditHistoryLength);
       
-      // Simple calculation for demo purposes
-      const debtToIncome = (loanAmountNum / loanTermNum / 12) / (incomeNum / 12);
-      let baseScore = creditScore[0];
-      
-      // Adjust score based on factors
-      if (debtToIncome > 0.43) baseScore -= 50;
-      if (debtToIncome < 0.2) baseScore += 30;
-      if (employmentYearsNum < 2) baseScore -= 30;
-      if (employmentYearsNum > 5) baseScore += 20;
-      
-      // Ensure score is within bounds
-      const finalScore = Math.max(300, Math.min(850, baseScore));
-      
-      // Determine risk level
-      let risk = 'High';
-      if (finalScore >= 740) risk = 'Low';
-      else if (finalScore >= 670) risk = 'Moderate';
-      else if (finalScore >= 580) risk = 'Moderate-High';
-      
-      setResult({
-        score: finalScore,
-        risk,
-        recommended: finalScore >= 620
+      // Use our credit risk model
+      const assessmentResult = assessCreditRisk({
+        personIncome: incomeNum,
+        loanAmount: loanAmountNum,
+        spendingHabits: spendingHabits,
+        creditHistoryLength: creditHistoryLengthNum
       });
+      
+      setResult(assessmentResult);
       
       toast({
         title: 'Assessment Complete',
@@ -95,18 +81,17 @@ const Assessment = () => {
         description: 'An error occurred during the assessment.',
         variant: 'destructive',
       });
+      console.error('Assessment error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const resetForm = () => {
-    setApplicantName('');
     setIncome('');
-    setCreditScore([650]);
     setLoanAmount('');
-    setLoanTerm('');
-    setEmploymentYears('');
+    setSpendingHabits('Average');
+    setCreditHistoryLength('');
     setResult(null);
   };
 
@@ -126,83 +111,54 @@ const Assessment = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Assessment Form */}
+            {/* Assessment Form - Updated with ML model criteria */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="applicantName">Applicant Name *</Label>
-                      <Input
-                        id="applicantName"
-                        value={applicantName}
-                        onChange={(e) => setApplicantName(e.target.value)}
-                        placeholder="John Doe"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="income">Annual Income ($) *</Label>
-                      <Input
-                        id="income"
-                        value={income}
-                        onChange={(e) => setIncome(e.target.value)}
-                        placeholder="60,000"
-                      />
-                    </div>
-                  </div>
-                  
                   <div className="space-y-2">
-                    <Label htmlFor="creditScore">Reported Credit Score</Label>
-                    <div className="pt-4 pb-2">
-                      <Slider
-                        defaultValue={[650]}
-                        min={300}
-                        max={850}
-                        step={1}
-                        value={creditScore}
-                        onValueChange={setCreditScore}
-                      />
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>Poor (300)</span>
-                      <span>Fair (580)</span>
-                      <span>Good (670)</span>
-                      <span>Excellent (800+)</span>
-                    </div>
-                    <div className="text-center mt-2">
-                      <span className="text-lg font-medium">{creditScore[0]}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="loanAmount">Loan Amount ($) *</Label>
-                      <Input
-                        id="loanAmount"
-                        value={loanAmount}
-                        onChange={(e) => setLoanAmount(e.target.value)}
-                        placeholder="25,000"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="loanTerm">Loan Term (Years) *</Label>
-                      <Input
-                        id="loanTerm"
-                        value={loanTerm}
-                        onChange={(e) => setLoanTerm(e.target.value)}
-                        placeholder="5"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="employmentYears">Years at Current Employment *</Label>
+                    <Label htmlFor="income">Annual Income ($) *</Label>
                     <Input
-                      id="employmentYears"
-                      value={employmentYears}
-                      onChange={(e) => setEmploymentYears(e.target.value)}
+                      id="income"
+                      value={income}
+                      onChange={(e) => setIncome(e.target.value)}
+                      placeholder="60,000"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="loanAmount">Loan Amount ($) *</Label>
+                    <Input
+                      id="loanAmount"
+                      value={loanAmount}
+                      onChange={(e) => setLoanAmount(e.target.value)}
+                      placeholder="25,000"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="spendingHabits">Spending Habits *</Label>
+                    <Select 
+                      onValueChange={(value: any) => setSpendingHabits(value)} 
+                      defaultValue="Average"
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select spending habits" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Frugal">Frugal</SelectItem>
+                        <SelectItem value="Average">Average</SelectItem>
+                        <SelectItem value="Moderate Spending">Moderate Spending</SelectItem>
+                        <SelectItem value="High Spending">High Spending</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="creditHistoryLength">Credit History Length (years) *</Label>
+                    <Input
+                      id="creditHistoryLength"
+                      value={creditHistoryLength}
+                      onChange={(e) => setCreditHistoryLength(e.target.value)}
                       placeholder="3"
                     />
                   </div>
