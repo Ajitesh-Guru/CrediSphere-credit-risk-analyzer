@@ -69,19 +69,19 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-theme-background">
       <Header />
       
-      <main className="flex-grow flex items-center justify-center bg-gray-50 py-12">
-        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+      <main className="flex-grow flex items-center justify-center py-12">
+        <div className="w-full max-w-md p-8 bg-theme-dark rounded-lg shadow-md border border-theme-tertiary/30">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Create an Account</h1>
-            <p className="text-gray-600 mt-2">Join CrediSphere to improve your credit assessment process</p>
+            <h1 className="text-2xl font-bold text-white">Create an Account</h1>
+            <p className="text-gray-400 mt-2">Join CrediSphere to improve your credit assessment process</p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="text-gray-300">Full Name</Label>
               <Input
                 id="name"
                 type="text"
@@ -89,11 +89,12 @@ const Register = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="bg-theme-tertiary/30 border-theme-tertiary/50 text-white placeholder:text-gray-500"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-300">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -101,11 +102,12 @@ const Register = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-theme-tertiary/30 border-theme-tertiary/50 text-white placeholder:text-gray-500"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-gray-300">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -113,11 +115,12 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-theme-tertiary/30 border-theme-tertiary/50 text-white placeholder:text-gray-500"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="text-gray-300">Confirm Password</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -125,18 +128,19 @@ const Register = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                className="bg-theme-tertiary/30 border-theme-tertiary/50 text-white placeholder:text-gray-500"
               />
             </div>
             
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-theme-primary hover:bg-theme-primary/90 text-theme-dark" disabled={isLoading}>
               {isLoading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
           
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Already have an account?{' '}
-              <Link to="/login" className="text-blue-600 hover:text-blue-800 font-medium">
+              <Link to="/login" className="text-theme-primary hover:text-theme-primary/80 font-medium">
                 Log in
               </Link>
             </p>

@@ -58,19 +58,19 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-theme-background">
       <Header />
       
-      <main className="flex-grow flex items-center justify-center bg-gray-50 py-12">
-        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+      <main className="flex-grow flex items-center justify-center py-12">
+        <div className="w-full max-w-md p-8 bg-theme-dark rounded-lg shadow-md border border-theme-tertiary/30">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Log In to CrediSphere</h1>
-            <p className="text-gray-600 mt-2">Enter your credentials to access your account</p>
+            <h1 className="text-2xl font-bold text-white">Log In to CrediSphere</h1>
+            <p className="text-gray-400 mt-2">Enter your credentials to access your account</p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-300">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -78,13 +78,14 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-theme-tertiary/30 border-theme-tertiary/50 text-white placeholder:text-gray-500"
               />
             </div>
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
+                <Label htmlFor="password" className="text-gray-300">Password</Label>
+                <Link to="/forgot-password" className="text-sm text-theme-primary hover:text-theme-primary/80">
                   Forgot password?
                 </Link>
               </div>
@@ -95,18 +96,19 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-theme-tertiary/30 border-theme-tertiary/50 text-white placeholder:text-gray-500"
               />
             </div>
             
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-theme-primary hover:bg-theme-primary/90 text-theme-dark" disabled={isLoading}>
               {isLoading ? 'Logging in...' : 'Log In'}
             </Button>
           </form>
           
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="text-gray-400">
               Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+              <Link to="/register" className="text-theme-primary hover:text-theme-primary/80 font-medium">
                 Sign up
               </Link>
             </p>
